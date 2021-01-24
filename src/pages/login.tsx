@@ -13,7 +13,7 @@ interface ILoginForm {
 }
 
 const LOGIN_MUTAITION = gql`
-  mutation LoginMutation($email: String!, $password: String!) {
+  mutation LoginMutation($loginInput: LoginInput!) {
     login(input: { email: $email, password: $password }) {
       error
       ok
@@ -24,18 +24,28 @@ const LOGIN_MUTAITION = gql`
 
 const Login = () => {
   const { register, errors, getValues, handleSubmit } = useForm<ILoginForm>();
+  const onCompleted = (data: LoginMutation) => {
+    const {
+      login: { ok, token, error },
+    } = data;
+    if (ok) {
+      console.log(token);
+    }
+  };
   //useMutationの１番目のargsはmutation function, triggerの役割を果たす。
   //useMutationの2番目のargsはobject, {error, loading, data}
-  const [loginTrg, { data }] = useMutation<
+  const [loginTrg, { data: loginMutationResult }] = useMutation<
     LoginMutation,
     LoginMutationVariables
-  >(LOGIN_MUTAITION);
+  >(LOGIN_MUTAITION, { onCompleted });
   const onSubmit = () => {
     const { email, password } = getValues();
     loginTrg({
       variables: {
-        email,
-        password,
+        loginInput: {
+          email,
+          password,
+        },
       },
     });
   };
@@ -78,6 +88,9 @@ const Login = () => {
             <FormError errorMessage={errors.password?.message} />
           )}
           <button className="mt-2 btnCss">ログイン</button>
+          {loginMutationResult?.login.error && (
+            <FormError errorMessage={loginMutationResult.login.error} />
+          )}
         </form>
       </div>
     </div>
