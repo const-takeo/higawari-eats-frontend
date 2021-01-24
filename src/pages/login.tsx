@@ -14,7 +14,7 @@ interface ILoginForm {
 
 const LOGIN_MUTAITION = gql`
   mutation LoginMutation($loginInput: LoginInput!) {
-    login(input: { email: $email, password: $password }) {
+    login(input: $loginInput) {
       error
       ok
       token
@@ -23,10 +23,10 @@ const LOGIN_MUTAITION = gql`
 `;
 
 const Login = () => {
-  const { register, errors, getValues, handleSubmit } = useForm<ILoginForm>();
+  const { register, getValues, handleSubmit, errors } = useForm<ILoginForm>();
   const onCompleted = (data: LoginMutation) => {
     const {
-      login: { ok, token, error },
+      login: { ok, token },
     } = data;
     if (ok) {
       console.log(token);
@@ -34,20 +34,22 @@ const Login = () => {
   };
   //useMutationの１番目のargsはmutation function, triggerの役割を果たす。
   //useMutationの2番目のargsはobject, {error, loading, data}
-  const [loginTrg, { data: loginMutationResult }] = useMutation<
+  const [loginTrg, { data: loginMutationResult, loading }] = useMutation<
     LoginMutation,
     LoginMutationVariables
   >(LOGIN_MUTAITION, { onCompleted });
   const onSubmit = () => {
-    const { email, password } = getValues();
-    loginTrg({
-      variables: {
-        loginInput: {
-          email,
-          password,
+    if (!loading) {
+      const { email, password } = getValues();
+      loginTrg({
+        variables: {
+          loginInput: {
+            email,
+            password,
+          },
         },
-      },
-    });
+      });
+    }
   };
   return (
     <div className="flex bg-gradient-to-t from-purple-800 to-blue-100 h-screen items-center justify-center">
@@ -58,20 +60,28 @@ const Login = () => {
           className="grid gap-3 mt-5 px-5"
         >
           <input
-            ref={register({ required: "メールを入力して下さい。" })}
+            ref={register({
+              required: "メールを入力して下さい。",
+              pattern: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            })}
             required
             type="email"
             name="email"
             placeholder="メール"
             className="inputCss mb-2"
           />
+          {errors.email?.type === "pattern" && (
+            <FormError
+              errorMessage={"メールの形式に合わせてご入力して下さい。"}
+            />
+          )}
           {errors.email?.message && (
             <FormError errorMessage={errors.email?.message} />
           )}
           <input
             ref={register({
               required: "パスワードを入力して下さい。",
-              minLength: 10,
+              minLength: 4,
             })}
             required
             type="password"
@@ -87,7 +97,9 @@ const Login = () => {
           {errors.password?.message && (
             <FormError errorMessage={errors.password?.message} />
           )}
-          <button className="mt-2 btnCss">ログイン</button>
+          <button className="mt-2 btnCss">
+            {loading ? "Loading.." : "ログイン"}
+          </button>
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
