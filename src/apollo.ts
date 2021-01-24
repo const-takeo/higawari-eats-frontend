@@ -1,6 +1,21 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
+
+export const isLoggedInVar = makeVar(false);
 
 export const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
-  cache: new InMemoryCache()
+  uri: "http://localhost:4000/graphql",
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          isLoggedIn: {
+            //read -> fieldの値を返す関数。
+            read() {
+              return isLoggedInVar();
+            },
+          },
+        },
+      },
+    },
+  }),
 });
