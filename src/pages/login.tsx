@@ -1,15 +1,36 @@
+import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { FormError } from "../components/form-error";
 
 interface ILoginForm {
   email?: string;
   password?: string;
 }
 
+const LOGIN_MUTAITION = gql`
+  mutation LoginMutation($email: String!, $password: String!) {
+    login(input: { email: $email, password: $password }) {
+      error
+      ok
+      token
+    }
+  }
+`;
+
 const Login = () => {
   const { register, errors, getValues, handleSubmit } = useForm<ILoginForm>();
+  //useMutationの１番目のargsはmutation function, triggerの役割を果たす。
+  //useMutationの2番目のargsはobject, {error, loading, data}
+  const [loginTrg] = useMutation(LOGIN_MUTAITION);
   const onSubmit = () => {
-    console.log(getValues());
+    const { email, password } = getValues();
+    loginTrg({
+      variables: {
+        email,
+        password,
+      },
+    });
   };
   return (
     <div className="flex bg-gradient-to-t from-purple-800 to-blue-100 h-screen items-center justify-center">
@@ -28,9 +49,7 @@ const Login = () => {
             className="inputCss mb-2"
           />
           {errors.email?.message && (
-            <span className="font-medium text-red-500">
-              {errors.email.message}
-            </span>
+            <FormError errorMessage={errors.email?.message} />
           )}
           <input
             ref={register({
@@ -44,14 +63,12 @@ const Login = () => {
             className="inputCss"
           />
           {errors.password?.type === "minLength" && (
-            <span className="font-medium text-red-500">
-              パスワードを10文字以上入力して下さい。
-            </span>
+            <FormError
+              errorMessage={"パスワードを10文字以上入力して下さい。"}
+            />
           )}
           {errors.password?.message && (
-            <span className="font-medium text-red-500">
-              {errors.password.message}
-            </span>
+            <FormError errorMessage={errors.password?.message} />
           )}
           <button className="mt-2 btnCss">ログイン</button>
         </form>
