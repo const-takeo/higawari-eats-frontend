@@ -2,10 +2,14 @@ import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FormError } from "../components/form-error";
+import {
+  LoginMutation,
+  LoginMutationVariables,
+} from "../__generated__/LoginMutation";
 
 interface ILoginForm {
-  email?: string;
-  password?: string;
+  email: string;
+  password: string;
 }
 
 const LOGIN_MUTAITION = gql`
@@ -22,7 +26,10 @@ const Login = () => {
   const { register, errors, getValues, handleSubmit } = useForm<ILoginForm>();
   //useMutationの１番目のargsはmutation function, triggerの役割を果たす。
   //useMutationの2番目のargsはobject, {error, loading, data}
-  const [loginTrg] = useMutation(LOGIN_MUTAITION);
+  const [loginTrg, { data }] = useMutation<
+    LoginMutation,
+    LoginMutationVariables
+  >(LOGIN_MUTAITION);
   const onSubmit = () => {
     const { email, password } = getValues();
     loginTrg({
