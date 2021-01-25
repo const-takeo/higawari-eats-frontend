@@ -1,4 +1,4 @@
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import higawariLogo from "../images/logo.svg";
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
@@ -10,6 +10,8 @@ import {
 } from "../__generated__/LoginMutation";
 import { Button } from "../components/button";
 import { Link } from "react-router-dom";
+import { authToken, isLoggedInVar } from "../apollo";
+import { LOCALSTORAGE_TOKEN } from "../constants";
 
 interface ILoginForm {
   email: string;
@@ -27,6 +29,7 @@ const LOGIN_MUTAITION = gql`
 `;
 
 const Login = () => {
+  console.log(isLoggedInVar());
   const {
     register,
     getValues,
@@ -40,8 +43,11 @@ const Login = () => {
     const {
       login: { ok, token },
     } = data;
-    if (ok) {
+    if (ok && token) {
       console.log(token);
+      localStorage.setItem(LOCALSTORAGE_TOKEN, token);
+      authToken(token);
+      isLoggedInVar(true);
     }
   };
   //useMutationの１番目のargsはmutation function, triggerの役割を果たす。

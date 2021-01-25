@@ -1,12 +1,16 @@
-import Helmet from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import higawariLogo from "../images/logo.svg";
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FormError } from "../components/form-error";
 import { Button } from "../components/button";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { UserRole } from "../__generated__/globalTypes";
+import {
+  createAccountMutation,
+  createAccountMutationVariables,
+} from "../__generated__/createAccountMutation";
 
 interface CreateAccountForm {
   email: string;
@@ -28,7 +32,6 @@ const CreateAccount = () => {
     register,
     getValues,
     handleSubmit,
-    watch,
     errors,
     formState,
   } = useForm<CreateAccountForm>({
@@ -37,11 +40,38 @@ const CreateAccount = () => {
       role: UserRole.Client,
     },
   });
+  const history = useHistory();
+  const onCompleted = (data: createAccountMutation) => {
+    const {
+      createAccount: { ok },
+    } = data;
+    if (ok) {
+      history.push("/");
+    }
+  };
   //useMutationの１番目のargsはmutation function, triggerの役割を果たす。
   //useMutationの2番目のargsはobject, {error, loading, data}
-  const [createAccountMutation] = useMutation(CREATE_ACCOUNT_MUTAITION);
-  const onSubmit = () => {};
-  console.log(watch());
+  const [
+    createAccountMutation,
+    { loading, error, data: createAccountResult },
+  ] = useMutation<createAccountMutation, createAccountMutationVariables>(
+    CREATE_ACCOUNT_MUTAITION,
+    { onCompleted }
+  );
+  const onSubmit = () => {
+    const { email, password, role } = getValues();
+    if (!loading) {
+      createAccountMutation({
+        variables: {
+          createAccountInput: {
+            email,
+            password,
+            role,
+          },
+        },
+      });
+    }
+  };
   return (
     <div className="h-screen flex flex-col items-center mt-5 lg:mt-28">
       <Helmet>
@@ -50,7 +80,8 @@ const CreateAccount = () => {
       <div className="w-full max-w-screen-sm flex flex-col items-center px-5">
         <img
           src={higawariLogo}
-          className=" w-72 mb-5 text-yellow-600 text-opacity-75"
+          className=" w-72 mb-5"
+          alt="Higawari-eats-logo"
         />
         <h4 className="w-full text-left font-medium text-2xl mb-5">
           さあ始めましょう
@@ -110,14 +141,17 @@ const CreateAccount = () => {
           </select>
           <Button
             canClick={formState.isValid}
-            loading={false}
+            loading={loading}
             actionText="生成"
           />
+          {createAccountResult?.createAccount.error && (
+            <FormError errorMessage={createAccountResult.createAccount.error} />
+          )}
         </form>
         <div>
           既にアカウントをお持ちでしょうか?{" "}
           <Link
-            to="/login"
+            to="/"
             className="text-yellow-600 text-opacity-75 hover:underline"
           >
             ログイン
