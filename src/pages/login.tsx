@@ -1,3 +1,4 @@
+import higawariLogo from "../images/logo.svg";
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -6,6 +7,8 @@ import {
   LoginMutation,
   LoginMutationVariables,
 } from "../__generated__/LoginMutation";
+import { Button } from "../components/button";
+import { Link } from "react-router-dom";
 
 interface ILoginForm {
   email: string;
@@ -23,7 +26,15 @@ const LOGIN_MUTAITION = gql`
 `;
 
 const Login = () => {
-  const { register, getValues, handleSubmit, errors } = useForm<ILoginForm>();
+  const {
+    register,
+    getValues,
+    handleSubmit,
+    errors,
+    formState,
+  } = useForm<ILoginForm>({
+    mode: "onChange",
+  });
   const onCompleted = (data: LoginMutation) => {
     const {
       login: { ok, token },
@@ -52,12 +63,15 @@ const Login = () => {
     }
   };
   return (
-    <div className="flex bg-gradient-to-t from-purple-800 to-blue-100 h-screen items-center justify-center">
-      <div className="bg-white w-full max-w-lg pt-10 pb-7 rounded-lg text-center">
-        <h3 className=" text-xl text-gray-500">ログイン</h3>
+    <div className="h-screen flex flex-col items-center mt-5 lg:mt-28">
+      <div className="w-full max-w-screen-sm flex flex-col items-center px-5">
+        <img src={higawariLogo} className=" w-72 mb-5" />
+        <h4 className="w-full text-left font-medium text-2xl mb-5">
+          ご利用いただきありがとうございます
+        </h4>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grid gap-3 mt-5 px-5"
+          className="grid gap-3 mt-5 w-full mb-4"
         >
           <input
             ref={register({
@@ -68,7 +82,7 @@ const Login = () => {
             type="email"
             name="email"
             placeholder="メール"
-            className="inputCss mb-2"
+            className="inputCss"
           />
           {errors.email?.type === "pattern" && (
             <FormError
@@ -97,13 +111,24 @@ const Login = () => {
           {errors.password?.message && (
             <FormError errorMessage={errors.password?.message} />
           )}
-          <button className="mt-2 btnCss">
-            {loading ? "Loading.." : "ログイン"}
-          </button>
+          <Button
+            canClick={formState.isValid}
+            loading={loading}
+            actionText="LogIn"
+          />
           {loginMutationResult?.login.error && (
             <FormError errorMessage={loginMutationResult.login.error} />
           )}
         </form>
+        <div>
+          Higawariのご利用は初めてですか?{" "}
+          <Link
+            to="create-account"
+            className="text-yellow-600 text-opacity-75 hover:underline"
+          >
+            アカウントを作成
+          </Link>
+        </div>
       </div>
     </div>
   );
