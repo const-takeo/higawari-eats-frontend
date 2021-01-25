@@ -1,3 +1,4 @@
+import Helmet from "react-helmet";
 import higawariLogo from "../images/logo.svg";
 import { gql, useMutation } from "@apollo/client";
 import React from "react";
@@ -64,6 +65,9 @@ const Login = () => {
   };
   return (
     <div className="h-screen flex flex-col items-center mt-5 lg:mt-28">
+      <Helmet>
+        <title>Higawari Eats | Login</title>
+      </Helmet>
       <div className="w-full max-w-screen-sm flex flex-col items-center px-5">
         <img src={higawariLogo} className=" w-72 mb-5" />
         <h4 className="w-full text-left font-medium text-2xl mb-5">

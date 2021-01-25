@@ -609,32 +609,6 @@ video {
   transition-duration: 500ms;
 }
 
-.btnCss {
-  --tw-bg-opacity: 1;
-  background-color: rgba(217, 119, 6, var(--tw-bg-opacity));
-}
-
-.btnCss:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgba(217, 119, 6, var(--tw-bg-opacity));
-}
-
-.btnCss {
-  --tw-bg-opacity: 0.75;
-  font-weight: 500;
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-  margin-top: 0.5rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  --tw-text-opacity: 1;
-  color: rgba(255, 255, 255, var(--tw-text-opacity));
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-  transition-duration: 500ms;
-}
-
 .space-y-0 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
