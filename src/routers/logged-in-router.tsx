@@ -1,7 +1,22 @@
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import { isLoggedInVar } from "../apollo";
+import { Restaurants } from "../pages/client/restaurants";
 import { meQuery } from "../__generated__/meQuery";
+
+//switchはchildとしてrouteしか持つ事ができない、だがClientRoutesはfragment <></>をreturnするからエラーになる。
+//直し方は簡単arrayし変える。
+const ClientRoutes = [
+  <Route path="/" exact>
+    <Restaurants />
+  </Route>,
+];
 
 const ME_QUERY = gql`
   query meQuery {
@@ -24,10 +39,12 @@ const LoggedInRouter = () => {
     );
   }
   return (
-    <div>
-      <h3>{data.me.email}</h3>
-      <span>LoggedIn</span>
-    </div>
+    <Router>
+      <Switch>
+        {data.me.role === "Client" && ClientRoutes}
+        <Redirect to="/" />
+      </Switch>
+    </Router>
   );
 };
 

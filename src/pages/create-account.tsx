@@ -135,8 +135,8 @@ const CreateAccount = () => {
               required: true,
             })}
           >
-            {Object.keys(UserRole).map((role) => (
-              <option>{role}</option>
+            {Object.keys(UserRole).map((role, index) => (
+              <option key={index}>{role}</option>
             ))}
           </select>
           <Button
