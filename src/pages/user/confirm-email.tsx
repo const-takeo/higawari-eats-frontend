@@ -1,6 +1,6 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useMe } from "../../hooks/useMe";
 import {
   verifyEmail,
@@ -17,6 +17,7 @@ const VERIFY_EMAIL_MUTATION = gql`
 `;
 
 export const ConfirmEmail = () => {
+  const history = useHistory();
   const client = useApolloClient();
   const { data: userData } = useMe();
   const onCompleted = (data: verifyEmail) => {
@@ -24,7 +25,7 @@ export const ConfirmEmail = () => {
       verifyEmail: { error, ok },
     } = data;
     if (ok && userData?.me.id) {
-        //cacheを直接修正する方法
+      //cacheを直接修正する方法
       client.writeFragment({
         id: `UserEntity:${userData.me.id}`,
         fragment: gql`
@@ -36,6 +37,7 @@ export const ConfirmEmail = () => {
           verified: true,
         },
       });
+      history.push("/");
     }
   };
   const [verifyTrg] = useMutation<verifyEmail, verifyEmailVariables>(
@@ -49,7 +51,6 @@ export const ConfirmEmail = () => {
   useEffect(() => {
     // console.log(location.search);
     const [_, code] = window.location.href.split("confirm?=");
-    console.log(code);
     verifyTrg({
       variables: {
         input: {

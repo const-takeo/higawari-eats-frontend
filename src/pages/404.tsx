@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export const NotFound = () => (
-  <div className="h-screen flex flex-col items-center justify-center">
+  <div className="h-screen flex flex-col items-center mt-72">
     <h2 className="font-semibold text-2xl mb-3">
       ページを見つかりませんでした。
     </h2>
