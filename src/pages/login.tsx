@@ -29,7 +29,6 @@ const LOGIN_MUTAITION = gql`
 `;
 
 const Login = () => {
-  console.log(isLoggedInVar());
   const {
     register,
     getValues,
