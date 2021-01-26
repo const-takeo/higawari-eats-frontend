@@ -104,7 +104,7 @@ const Login = () => {
           <input
             ref={register({
               required: "パスワードを入力して下さい。",
-              minLength: 4,
+              minLength: 8,
             })}
             required
             type="password"
@@ -113,9 +113,7 @@ const Login = () => {
             className="inputCss"
           />
           {errors.password?.type === "minLength" && (
-            <FormError
-              errorMessage={"パスワードを10文字以上入力して下さい。"}
-            />
+            <FormError errorMessage={"パスワードを8文字以上入力して下さい。"} />
           )}
           {errors.password?.message && (
             <FormError errorMessage={errors.password?.message} />
