@@ -25,6 +25,8 @@ export const ConfirmEmail = () => {
       verifyEmail: { error, ok },
     } = data;
     if (ok && userData?.me.id) {
+      //cacheを直接じゃなくてrefetchしてアップデートする方法
+      // await refetch(); Promiseを返す、const { data: userData, refetch } = useMe();
       //cacheを直接修正する方法
       client.writeFragment({
         id: `UserEntity:${userData.me.id}`,

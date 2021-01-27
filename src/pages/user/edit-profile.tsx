@@ -70,7 +70,7 @@ export const EditProfile = () => {
           data: {
             email: newEmail,
             verified: false,
-          },
+          }, 
         });
       }
     }
