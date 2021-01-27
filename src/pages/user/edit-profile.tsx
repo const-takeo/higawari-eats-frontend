@@ -82,7 +82,7 @@ export const EditProfile = () => {
     onCompleted,
   });
   return (
-    <div className="flex flex-col h-screen mt-52 items-center">
+    <div className="flex flex-col h-screen mt-52 items-center px-5">
       <h4 className="font-semibold text-2xl mb-3">プロフィール</h4>
       <form
         className="grid gap-3 mt-5 w-full max-w-screen-sm mb-4"
