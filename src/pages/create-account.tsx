@@ -75,7 +75,7 @@ const CreateAccount = () => {
   return (
     <div className="h-screen flex flex-col items-center mt-5 lg:mt-28">
       <Helmet>
-        <title>Higawari Eats | Create Account</title>
+        <title>Create Account | Higawari Eats</title>
       </Helmet>
       <div className="w-full max-w-screen-sm flex flex-col items-center px-5">
         <img

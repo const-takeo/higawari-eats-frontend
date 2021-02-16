@@ -1,5 +1,6 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
 import React from "react";
+import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/button";
 import { FormError } from "../../components/form-error";
@@ -70,7 +71,7 @@ export const EditProfile = () => {
           data: {
             email: newEmail,
             verified: false,
-          }, 
+          },
         });
       }
     }
@@ -83,6 +84,9 @@ export const EditProfile = () => {
   });
   return (
     <div className="flex flex-col h-screen mt-52 items-center px-5">
+      <Helmet>
+        <title>Edit Profile | Higawari Eats</title>
+      </Helmet>
       <h4 className="font-semibold text-2xl mb-3">プロフィール</h4>
       <form
         className="grid gap-3 mt-5 w-full max-w-screen-sm mb-4"

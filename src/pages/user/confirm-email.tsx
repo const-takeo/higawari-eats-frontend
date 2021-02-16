@@ -1,5 +1,6 @@
 import { gql, useApolloClient, useMutation } from "@apollo/client";
 import React, { useEffect } from "react";
+import { Helmet } from "react-helmet";
 import { useHistory, useLocation } from "react-router-dom";
 import { useMe } from "../../hooks/useMe";
 import {
@@ -63,6 +64,9 @@ export const ConfirmEmail = () => {
   }, []);
   return (
     <div className="flex flex-col text-center h-screen mt-60">
+      <Helmet>
+        <title>Verify Email | Higawari Eats</title>
+      </Helmet>
       <h2 className="text-lg font-semibold mb-2">
         アカウントを認証しています。
       </h2>
