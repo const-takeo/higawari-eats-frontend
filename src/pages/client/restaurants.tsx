@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client";
-import HigawariBack from "../../images/higawariback.jpg";
 import React from "react";
 import {
   restaurantPageQuery,
@@ -50,30 +49,50 @@ export const Restaurants = () => {
     },
   });
   return (
-    <div className="relative w-full h-96 opacity-80">
-      <img
-        src={HigawariBack}
-        alt="higawari-eats-background"
-        className="w-full h-full"
-      />
-      <form className="absolute top-1/2 left-1/3 w-4/12">
+    <div>
+      <form
+        style={{
+          backgroundImage: `url(https://www.kogakuin.ac.jp/campus/fbb28u0000005ate-img/fbb28u0000005ats.jpg)`,
+        }}
+        className="w-full py-40 flex items-center justify-center bg-cover bg-center mx-auto max-w-screen-2xl"
+      >
         <input
-          className="inputCss w-full border-0 items-center justify-center"
+          className="inputCss w-3/4 border-0 items-center justify-center md:w-3/12"
           type="Search"
           placeholder="探してるレストランは？"
         />
       </form>
       {!loading && (
-        <div className="mt-5 mx-auto max-w-screen-2xl">
+        <div className="mt-8 mx-auto max-w-screen-2xl">
+          {/* //category component */}
           <div className="flex justify-around max-w-xs mx-auto">
             {data?.allCategories.categories?.map((category) => (
-              <div className="flex flex-col items-center cursor-pointer rounded-2xl hover:bg-gray-200">
+              <div className="flex flex-col items-center cursor-pointer group">
                 <div
-                  className="w-14 h-14 rounded-full bg-yellow-500 bg-cover"
+                  className="w-14 h-14 rounded-full bg-yellow-500 bg-cover "
                   style={{ backgroundImage: `url(${category.coverImg})` }}
                 ></div>
-                <span className="mt-3 text-sm text-center font-medium">
+                <span className="mt-3 text-sm text-center font-medium group-hover:bg-gray-200 rounded-lg">
                   {category.name}
+                </span>
+              </div>
+            ))}
+          </div>
+          {/* // */}
+          <div className="grid grid-cols-3 gap-x-7 gap-y-10 mt-8">
+            {data?.restaurants.results?.map((restaurant) => (
+              <div>
+                <div
+                  style={{ backgroundImage: `url(${restaurant.coverImg})` }}
+                  className="bg-red-300 py-28 bg-cover bg-center mb-2"
+                ></div>
+                <h3 className=" text-lg font-medium">
+                  {restaurant.name.length < 35
+                    ? restaurant.name
+                    : `${restaurant.name.substring(0, 35)}...`}
+                </h3>
+                <span className="border-t-2 border-gray-400">
+                  {restaurant.category?.name}
                 </span>
               </div>
             ))}
