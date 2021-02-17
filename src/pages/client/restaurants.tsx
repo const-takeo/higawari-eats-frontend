@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import React from "react";
+import { Restaurant } from "../../components/restaurant";
 import {
   restaurantPageQuery,
   restaurantPageQueryVariables,
@@ -81,20 +82,12 @@ export const Restaurants = () => {
           {/* // */}
           <div className="grid grid-cols-3 gap-x-7 gap-y-10 mt-8">
             {data?.restaurants.results?.map((restaurant) => (
-              <div>
-                <div
-                  style={{ backgroundImage: `url(${restaurant.coverImg})` }}
-                  className="bg-red-300 py-28 bg-cover bg-center mb-2"
-                ></div>
-                <h3 className=" text-lg font-medium">
-                  {restaurant.name.length < 35
-                    ? restaurant.name
-                    : `${restaurant.name.substring(0, 35)}...`}
-                </h3>
-                <span className="border-t-2 border-gray-400">
-                  {restaurant.category?.name}
-                </span>
-              </div>
+              <Restaurant
+                id={restaurant.id.toString()}
+                coverImg={restaurant.coverImg}
+                name={restaurant.name}
+                categoryName={restaurant.category?.name}
+              />
             ))}
           </div>
         </div>
