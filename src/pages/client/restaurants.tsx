@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import React from "react";
+import React, { useState } from "react";
 import { Restaurant } from "../../components/restaurant";
 import {
   restaurantPageQuery,
@@ -39,21 +39,24 @@ const RESTAURANT_QUERY = gql`
 `;
 
 export const Restaurants = () => {
-  const { data, loading, error } = useQuery<
+  const [page, setPage] = useState(1);
+  const { data, loading } = useQuery<
     restaurantPageQuery,
     restaurantPageQueryVariables
   >(RESTAURANT_QUERY, {
     variables: {
       input: {
-        page: 1,
+        page,
       },
     },
   });
+  const onNextPageClick = () => setPage((current) => current + 1);
+  const onPrevPageClick = () => setPage((current) => current - 1);
   return (
     <div>
       <form
         style={{
-          backgroundImage: `url(https://www.kogakuin.ac.jp/campus/fbb28u0000005ate-img/fbb28u0000005ats.jpg)`,
+          backgroundImage: `url(https://resources.matcha-jp.com/archive_files/jp/2016/09/what_is_sakura.jpg)`,
         }}
         className="w-full py-40 flex items-center justify-center bg-cover bg-center mx-auto max-w-screen-2xl"
       >
@@ -64,13 +67,13 @@ export const Restaurants = () => {
         />
       </form>
       {!loading && (
-        <div className="mt-8 mx-auto max-w-screen-2xl">
+        <div className="mt-8 mx-auto max-w-screen-2xl mb-20">
           {/* //category component */}
-          <div className="flex justify-around max-w-xs mx-auto">
+          <div className="justify-around flex max-w-lg mx-auto">
             {data?.allCategories.categories?.map((category) => (
               <div className="flex flex-col items-center cursor-pointer group">
                 <div
-                  className="w-14 h-14 rounded-full bg-yellow-500 bg-cover "
+                  className="w-14 h-14 rounded-full bg-cover "
                   style={{ backgroundImage: `url(${category.coverImg})` }}
                 ></div>
                 <span className="mt-3 text-sm text-center font-medium group-hover:bg-gray-200 rounded-lg">
@@ -89,6 +92,31 @@ export const Restaurants = () => {
                 categoryName={restaurant.category?.name}
               />
             ))}
+          </div>
+          <div className="grid grid-cols-3 text-center max-w-md mx-auto items-center mt-10 ">
+            {page > 1 ? (
+              <button
+                onClick={onPrevPageClick}
+                className="text-2xl font-bold focus:outline-none"
+              >
+                &larr;
+              </button>
+            ) : (
+              <div></div>
+            )}
+            <span className="font-semibold text-md">
+              ページ {page} の {data?.restaurants.totalPages}
+            </span>
+            {page !== data?.restaurants.totalPages ? (
+              <button
+                onClick={onNextPageClick}
+                className="text-2xl font-bold focus:outline-none"
+              >
+                &rarr;
+              </button>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
       )}
