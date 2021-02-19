@@ -14,12 +14,12 @@ export const Header = () => {
   return (
     <>
       {data?.me.verified !== true && (
-        <div className="bg-yellow-600 text-center p-5 font-light text-white">
+        <div className="bg-yellow-600 text-center p-3 font-light text-white">
           アカウントを認証して下さい。
         </div>
       )}
       <header className="py-4">
-        <div className=" pl-3 pr-7 xl:px-0 mx-auto w-screen max-w-screen-2xl flex justify-between items-center">
+        <div className="pl-3 pr-7 xl:px-0 mx-auto w-screen max-w-screen-2xl flex justify-between items-center">
           <Link to="/">
             <img
               src={higawariLogo}
