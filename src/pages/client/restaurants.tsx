@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { Restaurant } from "../../components/restaurant";
@@ -64,11 +65,14 @@ export const Restaurants = () => {
     const { searchTerm } = getValues();
     history.push({
       pathname: "/search",
-      search: `?term/${searchTerm}`,
+      search: `?term=${searchTerm}`,
     });
   };
   return (
     <div>
+      <Helmet>
+        <title>Home | Higawari Eats</title>
+      </Helmet>
       <form
         onSubmit={handleSubmit(onSearchSubmit)}
         style={{
