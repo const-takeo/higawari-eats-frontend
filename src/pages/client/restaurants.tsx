@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
+import { CategoryList } from "../../components/category-list";
 import { Restaurant } from "../../components/restaurant";
+import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   restaurantPageQuery,
   restaurantPageQueryVariables,
@@ -16,11 +18,7 @@ const RESTAURANT_QUERY = gql`
       ok
       error
       categories {
-        id
-        name
-        coverImg
-        slug
-        restaurantCount
+        ...CategoryParts
       }
     }
     restaurants(input: $input) {
@@ -29,16 +27,12 @@ const RESTAURANT_QUERY = gql`
       totalPages
       totalResults
       results {
-        id
-        name
-        coverImg
-        category {
-          name
-        }
-        address
+        ...RestaurantParts
       }
     }
   }
+  ${RESTAURANT_FRAGMENT}
+  ${CATEGORY_FRAGMENT}
 `;
 
 interface IFormProps {
@@ -91,22 +85,7 @@ export const Restaurants = () => {
       {!loading && (
         <div className="mt-8 mx-auto max-w-screen-2xl mb-20">
           {/* //category component */}
-          <div className="justify-around flex max-w-lg mx-auto">
-            {data?.allCategories.categories?.map((category) => (
-              <div
-                key={category.id}
-                className="flex flex-col items-center cursor-pointer group"
-              >
-                <div
-                  className="w-14 h-14 rounded-full bg-cover "
-                  style={{ backgroundImage: `url(${category.coverImg})` }}
-                ></div>
-                <span className="mt-3 text-sm text-center font-medium group-hover:bg-gray-200 rounded-lg">
-                  {category.name}
-                </span>
-              </div>
-            ))}
-          </div>
+          <CategoryList data={data} />
           {/* // */}
           <div className="md:grid grid-cols-3 gap-x-7 gap-y-10 mt-8">
             {data?.restaurants.results?.map((restaurant) => (
