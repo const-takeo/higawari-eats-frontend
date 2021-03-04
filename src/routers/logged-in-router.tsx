@@ -7,7 +7,8 @@ import { Category } from "../pages/client/category";
 import { Restaurant } from "../pages/client/restaurant";
 import { Restaurants } from "../pages/client/restaurants";
 import { Search } from "../pages/client/search";
-import { MyRestaurant } from "../pages/owner/my-restaurant";
+import { AddRestaurant } from "../pages/owner/add-restaurants";
+import { MyRestaurants } from "../pages/owner/my-restaurants";
 import { ConfirmEmail } from "../pages/user/confirm-email";
 import { EditProfile } from "../pages/user/edit-profile";
 
@@ -67,7 +68,11 @@ const commonRoutes = [
 const restaurantRoutes = [
   {
     path: "/",
-    component: <MyRestaurant />,
+    component: <MyRestaurants />,
+  },
+  {
+    path: "/add-restaurant",
+    component: <AddRestaurant />,
   },
 ];
 
@@ -87,20 +92,20 @@ const LoggedInRouter = () => {
         {/* restaurant */}
         {data.me.role === "Owner" &&
           restaurantRoutes.map(({ path, component }) => (
-            <Route path={path} key={path}>
+            <Route exact path={path} key={path}>
               {component}
             </Route>
           ))}
         {/* common */}
         {commonRoutes.map(({ path, component }) => (
-          <Route path={path} key={path}>
+          <Route exact path={path} key={path}>
             {component}
           </Route>
         ))}
         {/* client */}
         {data.me.role === "Client" &&
           clientRoutes.map(({ path, component }) => (
-            <Route path={path} key={path}>
+            <Route exact path={path} key={path}>
               {component}
             </Route>
           ))}

@@ -4,5 +4,11 @@
 .inputCss {
     @apply focus:outline-none focus:border-gray-400 border-2 text-lg font-light p-2 border-gray-200 transition duration-500;
 }
+.commonContainer {
+    @apply max-w-screen-2xl mx-auto mt-32;
+}
+.link {
+    @apply text-yellow-600 text-opacity-75 hover:underline;
+}
 
 @tailwind utilities;
