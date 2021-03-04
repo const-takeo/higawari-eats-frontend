@@ -27,14 +27,17 @@ export const Header = () => {
               alt="Higawari-eats-logo"
             />
           </Link>
-          <span className="text-xs">
-            <Link to="/edit-profile">
-              <FontAwesomeIcon
-                icon={faUser}
-                className="text-2xl text-yellow-600 text-opacity-75"
-              />
-            </Link>
-          </span>
+          <div className="items-center justify-center text-center">
+            <div className="text-xs">
+              <Link to="/edit-profile">
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="text-2xl text-yellow-600 text-opacity-75"
+                />
+              </Link>
+            </div>
+            <h4>{data?.me.email}</h4>
+          </div>
         </div>
       </header>
     </>
