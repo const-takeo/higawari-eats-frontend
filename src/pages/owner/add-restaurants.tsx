@@ -78,7 +78,9 @@ export const AddRestaurant = () => {
     formState,
     errors,
   } = useForm<IFormProps>({ mode: "onChange" });
+  //useState
   const [uploading, setUploading] = useState(false);
+  //onSubmit
   const onSubmit = async () => {
     try {
       setUploading(true);
