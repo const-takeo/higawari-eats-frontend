@@ -37,6 +37,7 @@ export interface restaurantPageQuery_restaurants_results {
   coverImg: string;
   category: restaurantPageQuery_restaurants_results_category | null;
   address: string;
+  isPromoted: boolean;
 }
 
 export interface restaurantPageQuery_restaurants {

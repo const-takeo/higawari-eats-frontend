@@ -19,6 +19,7 @@ export interface myRestaurants_myRestaurants_restaurants {
   coverImg: string;
   category: myRestaurants_myRestaurants_restaurants_category | null;
   address: string;
+  isPromoted: boolean;
 }
 
 export interface myRestaurants_myRestaurants {
