@@ -8,6 +8,7 @@ import {
   myRestaurant,
   myRestaurantVariables,
 } from "../../__generated__/myRestaurant";
+import { VictoryBar, VictoryChart } from "victory";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -83,6 +84,15 @@ export const MyRestaurant = () => {
               ))}
             </div>
           )}
+        </div>
+        {/*  */}
+        <div className="mt-20 mb-10">
+          <h4 className="text-center text-2xl font-medium">売上レポート</h4>
+          <div className="max-w-lg w-full mx-auto">
+            <VictoryChart domainPadding={20}>
+              <VictoryBar />
+            </VictoryChart>
+          </div>
         </div>
       </div>
     </div>
