@@ -3,12 +3,26 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import { Dish } from "../../components/dish";
-import { MENU_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
+import {
+  MENU_FRAGMENT,
+  ORDERS_FRAGMENT,
+  RESTAURANT_FRAGMENT,
+} from "../../fragments";
 import {
   myRestaurant,
   myRestaurantVariables,
 } from "../../__generated__/myRestaurant";
-import { VictoryBar, VictoryChart } from "victory";
+import {
+  VictoryAxis,
+  VictoryBar,
+  VictoryChart,
+  VictoryLabel,
+  VictoryLine,
+  VictoryPie,
+  VictoryTheme,
+  VictoryTooltip,
+  VictoryVoronoiContainer,
+} from "victory";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -20,11 +34,15 @@ export const MY_RESTAURANT_QUERY = gql`
         menu {
           ...MenuParts
         }
+        orders {
+          ...OrderParts
+        }
       }
     }
   }
   ${RESTAURANT_FRAGMENT}
   ${MENU_FRAGMENT}
+  ${ORDERS_FRAGMENT}
 `;
 
 interface IParams {
@@ -43,7 +61,12 @@ export const MyRestaurant = () => {
       },
     }
   );
-  console.log(data, error);
+  console.log(data);
+  const chartData = [
+    { x: 1000000, y: 1000 },
+    { x: 3000000, y: 2000 },
+    { x: 2000000, y: 3000 },
+  ];
   return (
     <div>
       <Helmet>
@@ -88,9 +111,54 @@ export const MyRestaurant = () => {
         {/*  */}
         <div className="mt-20 mb-10">
           <h4 className="text-center text-2xl font-medium">売上レポート</h4>
-          <div className="max-w-lg w-full mx-auto">
-            <VictoryChart domainPadding={20}>
-              <VictoryBar />
+          <div className="mt-10">
+            <VictoryChart
+              theme={VictoryTheme.material}
+              height={500}
+              width={window.innerWidth - 100}
+              domainPadding={30}
+              containerComponent={<VictoryVoronoiContainer />}
+            >
+              <VictoryLine
+                interpolation="linear"
+                labels={({ datum }) => `${datum.y}円`}
+                labelComponent={
+                  <VictoryTooltip
+                    flyoutPadding={20}
+                    renderInPortal
+                    style={
+                      {
+                        fontSize: 20,
+                        fill: "#ff9f43",
+                      } as any
+                    }
+                  />
+                }
+                style={{
+                  data: {
+                    strokeWidth: 5,
+                  },
+                }}
+                data={data?.myRestaurant.restaurant?.orders.map((order) => ({
+                  x: order.createdAt,
+                  y: order.total,
+                }))}
+              />
+              <VictoryAxis
+                tickLabelComponent={<VictoryLabel renderInPortal />}
+                style={{
+                  tickLabels: { fontSize: 20, fill: "#ff9f43" } as any,
+                }}
+                dependentAxis
+                offsetX={80}
+                tickFormat={(money) => `${money / 1000}千円`}
+              />
+              <VictoryAxis
+                style={{
+                  tickLabels: { fontSize: 20 } as any,
+                }}
+                tickFormat={(date) => new Date(date).toLocaleDateString("jp")}
+              />
             </VictoryChart>
           </div>
         </div>

@@ -41,3 +41,12 @@ export const MENU_FRAGMENT = gql`
     }
   }
 `;
+
+export const ORDERS_FRAGMENT = gql`
+  fragment OrderParts on OrderEntity {
+    id
+    createdAt
+    total
+    
+  }
+`;
