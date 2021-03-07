@@ -14,6 +14,7 @@ interface IProps {
 }
 
 export const Dish: React.FC<IProps> = ({
+  children: dishOptions,
   removeItem,
   id = 0,
   name,
@@ -39,14 +40,18 @@ export const Dish: React.FC<IProps> = ({
   //render
   return (
     <div
-      onClick={onClick}
       className={`px-4 pt-4 pb-8 border-2 hover:border-yellow-500 transition-all ${
         isSelected ? "border-yellow-500" : "hover:border-yellow-500"
       }`}
     >
       <div>
         <div className="mb-5">
-          <h3 className="text-lg font-medium">{name}</h3>
+          <h3 className="text-lg font-medium">
+            {name}
+            {order && (
+              <button onClick={onClick}>{isSelected ? "削除" : "追加"}</button>
+            )}
+          </h3>
           <h4 className="font-medium">{description}</h4>
         </div>
         <span className="font-medium text-lg">{`￥${price}`}</span>
@@ -54,12 +59,7 @@ export const Dish: React.FC<IProps> = ({
       {isCoustomer && options && options.length !== 0 && (
         <div>
           <h5 className="mt-8 mb-3 font-medium font-semibold">オプション</h5>
-          {options?.map((option, index) => (
-            <span className="flex items-center" key={index}>
-              <h6 className="mr-3">{option.name}</h6>
-              <h6 className="text-sm opacity-70">￥{option.extra}</h6>
-            </span>
-          ))}
+          {dishOptions}
         </div>
       )}
     </div>
