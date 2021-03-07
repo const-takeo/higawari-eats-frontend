@@ -1,6 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
+import React from "react";
 import { useParams } from "react-router-dom";
-import { RESTAURANT_FRAGMENT } from "../../fragments";
+import { Dish } from "../../components/dish";
+import { MENU_FRAGMENT, RESTAURANT_FRAGMENT } from "../../fragments";
 import {
   restaurant,
   restaurantVariables,
@@ -13,10 +15,14 @@ const RESTAURANT_QUERY = gql`
       ok
       restaurant {
         ...RestaurantParts
+        menu {
+          ...MenuParts
+        }
       }
     }
   }
   ${RESTAURANT_FRAGMENT}
+  ${MENU_FRAGMENT}
 `;
 
 interface IPProps {
@@ -52,6 +58,17 @@ export const Restaurant = () => {
             {data?.restaurant.restaurant?.address}
           </h5>
         </div>
+      </div>
+      <div className="commonContainer md:grid grid-cols-3 gap-x-7 gap-y-10 mt-8">
+        {data?.restaurant.restaurant?.menu.map((menu) => (
+          <Dish
+            isCoustomer={true}
+            name={menu.name}
+            description={menu.description}
+            price={menu.price}
+            options={menu.options}
+          />
+        ))}
       </div>
     </div>
   );
