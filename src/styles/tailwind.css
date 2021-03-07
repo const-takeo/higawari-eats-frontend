@@ -11,4 +11,8 @@
     @apply text-yellow-600 text-opacity-75 hover:underline;
 }
 
+.btn {
+    @apply focus:outline-none py-3 text-white transition duration-500 font-medium text-lg bg-yellow-600 bg-opacity-75 hover:bg-yellow-600;
+}
+
 @tailwind utilities;
