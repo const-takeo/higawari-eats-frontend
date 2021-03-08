@@ -138,6 +138,9 @@ export const Restaurant = () => {
     setOrderItems([]);
   };
   const confirmOrder = () => {
+    if(!placingOrder){
+      return;
+    }
     if (orderItems.length === 0) {
       alert("nonono");
       return;
