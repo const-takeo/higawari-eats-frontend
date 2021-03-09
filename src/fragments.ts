@@ -47,6 +47,22 @@ export const ORDERS_FRAGMENT = gql`
     id
     createdAt
     total
-    
+  }
+`;
+
+export const ALL_ORDER_FRAGMENT = gql`
+  fragment AllOrderParts on OrderEntity {
+    id
+    status
+    total
+    driver {
+      email
+    }
+    customer {
+      email
+    }
+    restaurant {
+      name
+    }
   }
 `;
