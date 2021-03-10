@@ -7,6 +7,7 @@ import { Category } from "../pages/client/category";
 import { Restaurant } from "../pages/client/restaurant";
 import { Restaurants } from "../pages/client/restaurants";
 import { Search } from "../pages/client/search";
+import { DashBoard } from "../pages/driver/dashboard";
 import { Order } from "../pages/order";
 import { AddMenu } from "../pages/owner/add-menu";
 import { AddRestaurant } from "../pages/owner/add-restaurants";
@@ -14,6 +15,7 @@ import { MyRestaurant } from "../pages/owner/my-restaurant";
 import { MyRestaurants } from "../pages/owner/my-restaurants";
 import { ConfirmEmail } from "../pages/user/confirm-email";
 import { EditProfile } from "../pages/user/edit-profile";
+import { UserRole } from "../__generated__/globalTypes";
 
 //switchはchildとしてrouteしか持つ事ができない、だがClientRoutesはfragment <></>をreturnするからエラーになる。
 //直し方は簡単arrayに変える。
@@ -91,6 +93,13 @@ const restaurantRoutes = [
   },
 ];
 
+const driverRoutes = [
+  {
+    path: "/",
+    component: <DashBoard />,
+  },
+];
+
 const LoggedInRouter = () => {
   const { data, error, loading } = useMe();
   if (loading || error || !data) {
@@ -105,7 +114,7 @@ const LoggedInRouter = () => {
       <Header />
       <Switch>
         {/* restaurant */}
-        {data.me.role === "Owner" &&
+        {data.me.role === UserRole.Owner &&
           restaurantRoutes.map(({ path, component }) => (
             <Route exact path={path} key={path}>
               {component}
@@ -118,8 +127,15 @@ const LoggedInRouter = () => {
           </Route>
         ))}
         {/* client */}
-        {data.me.role === "Client" &&
+        {data.me.role === UserRole.Client &&
           clientRoutes.map(({ path, component }) => (
+            <Route exact path={path} key={path}>
+              {component}
+            </Route>
+          ))}
+        {/* driver */}
+        {data.me.role === UserRole.Delivery &&
+          driverRoutes.map(({ path, component }) => (
             <Route exact path={path} key={path}>
               {component}
             </Route>
