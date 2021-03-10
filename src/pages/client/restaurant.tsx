@@ -138,9 +138,8 @@ export const Restaurant = () => {
     setOrderItems([]);
   };
   const confirmOrder = () => {
-    if(!placingOrder){
-      return;
-    }
+    console.log("click", orderItems);
+
     if (orderItems.length === 0) {
       alert("nonono");
       return;
@@ -175,7 +174,7 @@ export const Restaurant = () => {
   ] = useMutation<createOrder, createOrderVariables>(CREATE_ORDER_MUTATION, {
     onCompleted,
   });
-  console.log(orderItems);
+
   //render
   return (
     <div>

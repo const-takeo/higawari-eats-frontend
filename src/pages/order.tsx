@@ -1,13 +1,13 @@
-import { gql, useQuery, useSubscription } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router";
 import { ALL_ORDER_FRAGMENT } from "../fragments";
+import { useMe } from "../hooks/useMe";
+import { editOrder, editOrderVariables } from "../__generated__/editOrder";
 import { getOrder, getOrderVariables } from "../__generated__/getOrder";
-import {
-  orderUpdates,
-  orderUpdatesVariables,
-} from "../__generated__/orderUpdates";
+import { OrderStatus, UserRole } from "../__generated__/globalTypes";
+import { orderUpdates } from "../__generated__/orderUpdates";
 
 const ORDER_SUB = gql`
   subscription orderUpdates($input: OrderUpdateInput!) {
@@ -34,8 +34,21 @@ const GET_ORDERS = gql`
   }
   ${ALL_ORDER_FRAGMENT}
 `;
+
+const EDIT_ORDER = gql`
+  mutation editOrder($input: EditOrderInput!) {
+    editOrder(input: $input) {
+      error
+      ok
+    }
+  }
+`;
 export const Order = () => {
   const params = useParams<IParams>();
+  const { data: userData } = useMe();
+  const [editOrderMutation] = useMutation<editOrder, editOrderVariables>(
+    EDIT_ORDER
+  );
   const { data, subscribeToMore } = useQuery<getOrder, getOrderVariables>(
     GET_ORDERS,
     {
@@ -78,6 +91,16 @@ export const Order = () => {
     }
   }, [data]);
   //
+  const onButtonClick = (newStatus: OrderStatus) => {
+    editOrderMutation({
+      variables: {
+        input: {
+          id: +params.id,
+          status: newStatus,
+        },
+      },
+    });
+  };
   console.log(data);
   return (
     <div className="commonContainer justify-center flex">
@@ -112,9 +135,37 @@ export const Order = () => {
             </span>
           </div>
         </div>
-        <span className="text-center mt-5 mb-3 text-2xl text-yellow-500">
-          Status:{data?.getOrder.order?.status}
-        </span>
+        {userData?.me.role === "Client" && (
+          <span className="text-center mt-5 mb-3 text-2xl text-yellow-500">
+            Status:{data?.getOrder.order?.status}
+          </span>
+        )}
+        {userData?.me.role === UserRole.Owner && (
+          <>
+            {data?.getOrder.order?.status === OrderStatus.PENDING && (
+              <button
+                onClick={() => onButtonClick(OrderStatus.COOKING)}
+                className="btn"
+              >
+                Accept Order
+              </button>
+            )}
+            {data?.getOrder.order?.status === OrderStatus.COOKING && (
+              <button
+                onClick={() => onButtonClick(OrderStatus.COOKED)}
+                className="btn"
+              >
+                Order Cooked
+              </button>
+            )}
+            {data?.getOrder.order?.status !== OrderStatus.COOKING &&
+              data?.getOrder.order?.status !== OrderStatus.PENDING && (
+                <span className="text-center mt-5 mb-3 text-2xl text-yellow-500">
+                  Status:{data?.getOrder.order?.status}
+                </span>
+              )}
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
-import { gql, useQuery } from "@apollo/client";
-import React from "react";
+import { gql, useQuery, useSubscription } from "@apollo/client";
+import React, { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { Dish } from "../../components/dish";
 import {
+  ALL_ORDER_FRAGMENT,
   MENU_FRAGMENT,
   ORDERS_FRAGMENT,
   RESTAURANT_FRAGMENT,
@@ -23,6 +24,7 @@ import {
   VictoryTooltip,
   VictoryVoronoiContainer,
 } from "victory";
+import { pendingOrders } from "../../__generated__/pendingOrders";
 
 export const MY_RESTAURANT_QUERY = gql`
   query myRestaurant($input: MyRestaurantInput!) {
@@ -45,6 +47,15 @@ export const MY_RESTAURANT_QUERY = gql`
   ${ORDERS_FRAGMENT}
 `;
 
+const PENDING_ORDERS_SUBSCRIPTION = gql`
+  subscription pendingOrders {
+    pendingOrders {
+      ...AllOrderParts
+    }
+  }
+  ${ALL_ORDER_FRAGMENT}
+`;
+
 interface IParams {
   id: string;
 }
@@ -62,11 +73,16 @@ export const MyRestaurant = () => {
     }
   );
   console.log(data);
-  const chartData = [
-    { x: 1000000, y: 1000 },
-    { x: 3000000, y: 2000 },
-    { x: 2000000, y: 3000 },
-  ];
+  const { data: subscriptionData } = useSubscription<pendingOrders>(
+    PENDING_ORDERS_SUBSCRIPTION
+  );
+  const history = useHistory();
+  useEffect(() => {
+    if (subscriptionData?.pendingOrders.id) {
+      history.push(`/orders/${subscriptionData.pendingOrders.id}`);
+    }
+    //subscriptionDataが変更されるたびにuseEffectが再実行される
+  }, [subscriptionData]);
   return (
     <div>
       <Helmet>
