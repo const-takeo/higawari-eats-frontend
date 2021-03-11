@@ -11,7 +11,7 @@ interface IDriverProps {
   lng: number;
   $hover?: any;
 }
-
+const GOOGLEKEY = String(process.env.REACT_APP_GOOGLE_API_KEY);
 const Driver: React.FC<IDriverProps> = () => <div className="text-lg">🚘</div>;
 
 export const DashBoard = () => {
@@ -23,7 +23,6 @@ export const DashBoard = () => {
       coords: { latitude, longitude },
     } = position;
     setDriverCoords({ lat: latitude, lng: longitude });
-    console.log(latitude, longitude);
   };
   const onError = (error: GeolocationPositionError) => {
     console.log(error);
@@ -65,7 +64,9 @@ export const DashBoard = () => {
           onGoogleApiLoaded={onAPiLoaded}
           defaultZoom={16}
           defaultCenter={{ lat: 35.7594578, lng: 139.67185949999998 }}
-          bootstrapURLKeys={{ key: "AIzaSyCmkLHf7k00Rt8rgI8SzCVpg2buOPKaDvI" }}
+          bootstrapURLKeys={{
+            key: GOOGLEKEY,
+          }}
         >
           <Driver lat={driverCoords.lat} lng={driverCoords.lng} />
         </GoogleMapReact>
