@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 interface ICoords {
   lat: number;
-  lng: number;
+  lng: number;  
 }
 
 interface IDriverProps {
