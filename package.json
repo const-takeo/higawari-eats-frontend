@@ -37,7 +37,7 @@
   },
   "scripts": {
     "apollo:codegen": "rm -rf src/__generated__ && apollo client:codegen src/__generated__ --target=typescript --outputFlat",
-    "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/style.css",
+    "tailwind:build": "NODE_ENV=production tailwind build ./src/styles/tailwind.css -o ./src/styles/style.css",
     "start": "npm run apollo:codegen & npm run tailwind:build & react-scripts start",
     "build": "CI=false react-scripts build",
     "prebuild": "npm run tailwind:build",
