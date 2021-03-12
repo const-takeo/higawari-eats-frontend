@@ -16,7 +16,7 @@ export const authToken = makeVar(token);
 
 const wsLink = new WebSocketLink({
   uri:
-    process.env.NODE_ENV === "production"
+    process.env.NODE_ENV === "prod"
       ? "wss://higawari-eats-backend.herokuapp.com/graphql"
       : "ws://localhost:4000/graphql",
   options: {
@@ -29,7 +29,7 @@ const wsLink = new WebSocketLink({
 
 const httpLink = createHttpLink({
   uri:
-    process.env.NODE_ENV === "production"
+    process.env.NODE_ENV === "prod"
       ? "https://higawari-eats-backend.herokuapp.com/graphql"
       : "http://localhost:4000/graphql",
 });
