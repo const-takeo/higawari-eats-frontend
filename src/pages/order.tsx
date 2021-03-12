@@ -166,6 +166,31 @@ export const Order = () => {
               )}
           </>
         )}
+        {userData?.me.role === UserRole.Delivery && (
+          <>
+            {data?.getOrder.order?.status === OrderStatus.COOKED && (
+              <button
+                onClick={() => onButtonClick(OrderStatus.PICKEDUP)}
+                className="btn"
+              >
+                Picked Up
+              </button>
+            )}
+            {data?.getOrder.order?.status === OrderStatus.PICKEDUP && (
+              <button
+                onClick={() => onButtonClick(OrderStatus.DELIVERED)}
+                className="btn"
+              >
+                Order Delivered
+              </button>
+            )}
+          </>
+        )}
+        {data?.getOrder.order?.status === OrderStatus.DELIVERED && (
+          <span className="text-center mt-5 mb-3 text-2xl text-yellow-500">
+            Thanks
+          </span>
+        )}
       </div>
     </div>
   );
